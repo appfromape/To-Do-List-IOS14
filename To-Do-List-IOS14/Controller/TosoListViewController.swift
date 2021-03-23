@@ -6,15 +6,17 @@
 //
 
 import UIKit
+import CoreData
 
 class TosoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(dataFilePath!)
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         loadItems()
     }
 
@@ -31,7 +33,6 @@ class TosoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemArray[indexPath.row].title)
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
@@ -41,8 +42,9 @@ class TosoListViewController: UITableViewController {
         var textField = UITextField()
         let alert = UIAlertController(title: "加新的 TODO", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "加一個項目", style: .default) { (action) in
-            let newItem = Item()
+            let newItem = Item(context: self.context!)
             newItem.title = textField.text!
+            newItem.done = false
             self.itemArray.append(newItem)
             self.saveItems()
         }
@@ -55,10 +57,8 @@ class TosoListViewController: UITableViewController {
     }
     
     func saveItems() {
-        let encoder = PropertyListEncoder()
         do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+            try context!.save()
         } catch {
             print("Error:\(error)")
         }
@@ -66,14 +66,26 @@ class TosoListViewController: UITableViewController {
     }
     
     func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error: \(error)")
-            }
+//        let request = NSFetchRequest<NSFetchRequestResult> (entityName: "Item")
+//        request.returnsObjectsAsFaults = false
+//        do {
+//            let result = try context!.fetch(request)
+//            for data in result as! [NSManagedObject] {
+////                let title = data.value(forKey: "title") as! String
+////                let done = data.value(forKey: "done") as! Bool
+//                itemArray.append(data as! Item)
+//            }
+//        } catch {
+//            print("Error: \(error)")
+//        }
+        
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context!.fetch(request)
+        } catch {
+            print(error)
         }
     }
+        
 }
 
