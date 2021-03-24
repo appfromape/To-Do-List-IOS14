@@ -13,6 +13,7 @@
 		A03112D5260847ED00EB80A0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03112D3260847ED00EB80A0 /* Main.storyboard */; };
 		A03112D7260847EF00EB80A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A03112D6260847EF00EB80A0 /* Assets.xcassets */; };
 		A03112DA260847EF00EB80A0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03112D8260847EF00EB80A0 /* LaunchScreen.storyboard */; };
+		A04A4BFA260AE26E00948874 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04A4BF9260AE26E00948874 /* CategoryTableViewController.swift */; };
 		A05E94F52609E1CD00EBC408 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A05E94F32609E1CD00EBC408 /* DataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,7 @@
 		A03112D6260847EF00EB80A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A03112D9260847EF00EB80A0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A03112DB260847EF00EB80A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A04A4BF9260AE26E00948874 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		A05E94F42609E1CD00EBC408 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,6 +90,7 @@
 		A05E94EF2609A33F00EBC408 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				A04A4BF9260AE26E00948874 /* CategoryTableViewController.swift */,
 				A03112D1260847ED00EB80A0 /* TosoListViewController.swift */,
 			);
 			path = Controller;
@@ -174,6 +177,7 @@
 			files = (
 				A05E94F52609E1CD00EBC408 /* DataModel.xcdatamodeld in Sources */,
 				A03112D2260847ED00EB80A0 /* TosoListViewController.swift in Sources */,
+				A04A4BFA260AE26E00948874 /* CategoryTableViewController.swift in Sources */,
 				A03112CE260847ED00EB80A0 /* AppDelegate.swift in Sources */,
 				A03112D0260847ED00EB80A0 /* SceneDelegate.swift in Sources */,
 			);
