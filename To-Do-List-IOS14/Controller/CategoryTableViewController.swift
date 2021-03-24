@@ -7,25 +7,25 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 class CategoryTableViewController: UITableViewController {
     
-    var itemArray = [Category]()
-    let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
-
+    let realm = try! Realm()
+    var itemArray : Results<Category>?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadItems()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemArray.count
+        return itemArray?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        let item = itemArray[indexPath.row]
-        cell.textLabel?.text = item.name
+        cell.textLabel?.text = itemArray?[indexPath.row].name ?? "No add yet"
         return cell
     }
     
@@ -37,7 +37,7 @@ class CategoryTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destnationVC = segue.destination as! TosoListViewController
         if let indexPath = tableView.indexPathForSelectedRow {
-            destnationVC.selectCategor = itemArray[indexPath.row]
+            destnationVC.selectCategor = itemArray?[indexPath.row]
         }
     }
 
@@ -45,10 +45,9 @@ class CategoryTableViewController: UITableViewController {
         var textField = UITextField()
         let alert = UIAlertController(title: "加新的 TODO", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "加一個項目", style: .default) { (action) in
-            let newItem = Category(context: self.context!)
+            let newItem = Category()
             newItem.name = textField.text!
-            self.itemArray.append(newItem)
-            self.saveItems()
+            self.saveItems(category: newItem)
         }
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "增加新項目"
@@ -60,30 +59,30 @@ class CategoryTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            context?.delete(itemArray[indexPath.row])
-            itemArray.remove(at: indexPath.row)
+            let deletItem = itemArray![indexPath.row]
+            try! realm.write {
+                    realm.delete(deletItem)
+                }
             tableView.deleteRows(at: [indexPath], with: .fade)
-            self.saveItems()
+            tableView.reloadData()
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
     
-    func saveItems() {
+    func saveItems(category: Category) {
         do {
-            try context!.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print("Error:\(error)")
         }
         tableView.reloadData()
     }
     
-    func loadItems(with request: NSFetchRequest<Category> = Category.fetchRequest()) {
-        do {
-            itemArray = try context!.fetch(request)
-        } catch {
-            print(error)
-        }
+    func loadItems() {
+        itemArray = realm.objects(Category.self)
         tableView.reloadData()
     }
     
