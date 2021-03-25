@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class TosoListViewController: UITableViewController {
     
@@ -21,6 +22,7 @@ class TosoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        navigationController?.navigationBar.barTintColor = UIColor.randomFlat()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,6 +37,7 @@ class TosoListViewController: UITableViewController {
         } else {
             cell.textLabel?.text = "no item added"
         }
+        cell.backgroundColor = UIColor.randomFlat()
         return cell
     }
     
@@ -82,8 +85,8 @@ class TosoListViewController: UITableViewController {
         if editingStyle == .delete {
             let deletItem = itemArray![indexPath.row]
             try! realm.write {
-                    realm.delete(deletItem)
-                }
+                realm.delete(deletItem)
+            }
             tableView.deleteRows(at: [indexPath], with: .fade)
             tableView.reloadData()
         } else if editingStyle == .insert {
@@ -110,12 +113,10 @@ class TosoListViewController: UITableViewController {
 }
 
 extension TosoListViewController: UISearchBarDelegate {
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        loadItems(with: request, predicate: predicate)
-//    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        itemArray = itemArray?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "title", ascending: true)
+        tableView.reloadData()
+    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {

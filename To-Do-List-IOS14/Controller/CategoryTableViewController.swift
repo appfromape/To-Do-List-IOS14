@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import CoreData
 import RealmSwift
+import ChameleonFramework
 
 class CategoryTableViewController: UITableViewController {
     
@@ -16,6 +16,7 @@ class CategoryTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.barTintColor = UIColor.randomFlat()
         loadItems()
     }
     
@@ -26,6 +27,7 @@ class CategoryTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         cell.textLabel?.text = itemArray?[indexPath.row].name ?? "No add yet"
+        cell.backgroundColor = UIColor.randomFlat()
         return cell
     }
     
@@ -61,8 +63,9 @@ class CategoryTableViewController: UITableViewController {
         if editingStyle == .delete {
             let deletItem = itemArray![indexPath.row]
             try! realm.write {
-                    realm.delete(deletItem)
-                }
+                realm.delete(deletItem)
+//                realm.delete(deletItem.items)
+            }
             tableView.deleteRows(at: [indexPath], with: .fade)
             tableView.reloadData()
         } else if editingStyle == .insert {
